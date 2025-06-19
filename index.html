@@ -237,5 +237,28 @@ function showPopup() {
 function hidePopup() {
   document.getElementById('popup').style.display = 'none';
 }
+</script>
+<div id="image-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background-color:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
+<div style="position:relative;">
+<img id="modal-image" src="" style="max-width:90vw; max-height:90vh; border-radius:10px;"/>
+<button onclick="document.getElementById('image-modal').style.display='none'" style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; border-radius:50%; width:30px; height:30px;">×</button>
+</div>
+</div>
+<script>
+document.querySelectorAll("li").forEach(item => {
+  let touchstartX = 0;
+  let touchendX = 0;
+  item.addEventListener("touchstart", e => touchstartX = e.changedTouches[0].screenX);
+  item.addEventListener("touchend", e => {
+    touchendX = e.changedTouches[0].screenX;
+    if (touchendX < touchstartX - 50) {
+      const text = item.textContent.trim();
+      if (text === "ABD (Green)") {
+        document.getElementById("modal-image").src = "https://acnhcdn.com/latest/FtrIcon/FtrATM_Remake_4_0.png";
+        document.getElementById("image-modal").style.display = "flex";
+      }
+    }
+  });
+});
 </script></body>
 </html>
