@@ -289,7 +289,7 @@ button.badge-top-right:before {
 <div id="popup-content">
   <strong>Selected Items:</strong><br>
   <hr>
-  <div id="output"></div>
+  <ul id="output" style="list-style-type: none; padding: 0;"></ul>
 </div>
 <h1>🌿 ACNH Item Order Builder</h1>
 <input id="search" placeholder="Search for items..." type="text"/>
@@ -332,8 +332,8 @@ button.badge-top-right:before {
 function copyToClipboard() {
   const output = document.getElementById('output');
   if (output) {
-    const text = output.textContent;
-    navigator.clipboard.writeText(text).then(() => {
+    const items = [...output.querySelectorAll('li')].map(li => li.textContent).join(' ');
+    navigator.clipboard.writeText(items).then(() => {
       alert('Copied to clipboard!');
     });
   } else {
