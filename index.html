@@ -361,10 +361,22 @@ function showPopup() {
   const codes = Array.from(checked).map(cb => cb.value);
   const names = Array.from(checked).map(cb => cb.parentNode.innerText.trim());
   const popup = document.getElementById('popup');
-  const content = document.getElementById('popup-content');
-  content.innerHTML = "<strong>Selected Items:</strong><br>" + names.join("<br>") +
-                      "<hr><strong>Command:</strong><br>$order " + codes.join(" ");
-  popup.style.display = 'block';
+// Clear the popup first
+const content = document.getElementById('popup-content');
+content.innerHTML = `
+  <strong>Selected Items:</strong><hr>
+  <ul id="output" style="list-style-type: none; padding: 0;"></ul>
+`;
+
+// Fill in the output list
+const ul = document.getElementById('output');
+names.forEach(name => {
+  const li = document.createElement('li');
+  li.textContent = name;
+  ul.appendChild(li);
+});
+
+popup.style.display = 'block';
 }
 function hidePopup() {
   document.getElementById('popup').style.display = 'none';
