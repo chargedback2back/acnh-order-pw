@@ -157,6 +157,18 @@ body {
   display: block;
   margin: 1rem auto 0;
 }
+</style><style>
+#cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+  display: none;
+}
 </style></head>
 <body>
 <button id="popup-btn" onclick="showPopup()"></button>
@@ -273,5 +285,22 @@ function setupSwipeListeners() {
 window.addEventListener("load", () => {
   setTimeout(setupSwipeListeners, 500);
 });
+</script><script>
+function updateCartBadge() {
+  const selectedItems = document.querySelectorAll('input[type="checkbox"]:checked');
+  const badge = document.getElementById('cart-badge');
+  if (selectedItems.length > 0) {
+    badge.textContent = selectedItems.length;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', updateCartBadge);
+});
+
+window.addEventListener('load', updateCartBadge);
 </script></body>
 </html>
