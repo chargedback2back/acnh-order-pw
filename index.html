@@ -286,11 +286,7 @@ button.badge-top-right:before {
 <button id="popup-btn" onclick="showPopup()"><span id="cart-badge">0</span></button>
 <div id="popup">
 <span id="popup-close" onclick="hidePopup()">✖</span><button id="popup-copy" onclick="copyToClipboard()" style="margin-bottom: 1em; font-weight: bold; font-family: 'Fink Heavy'; background-color: #98c867; color: black; border: none; padding: 0.5em 1em; border-radius: 6px;">Copy</button>
-<div id="popup-content">
-  <strong>Selected Items:</strong><br>
-  <hr>
-  <ul id="output" style="list-style-type: none; padding: 0;"></ul>
-</div>
+<div id="popup-content"><strong>Selected Items:</strong><br/><hr/></div>
 </div>
 <h1>🌿 ACNH Item Order Builder</h1>
 <input id="search" placeholder="Search for items..." type="text"/>
@@ -306,12 +302,7 @@ button.badge-top-right:before {
     const output = document.getElementById('output');
 
     function renderList(filter = '') {
-      list.innerHTML += `
-  <label class="item">
-    <input type="checkbox" data-code="${item.code}" onchange="updateCartCount()" />
-    <span>${name}</span>
-  </label>
-`;
+      itemList.innerHTML = '';
       Object.keys(items)
         .filter(name => name.toLowerCase().includes(filter.toLowerCase()))
         .forEach(name => {
@@ -337,14 +328,13 @@ button.badge-top-right:before {
 
 function copyToClipboard() {
   const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-  const codes = [...checkboxes].map(cb => cb.getAttribute('data-code')).filter(code => code);
+  const codes = Array.from(checkboxes).map(cb => cb.value);
   const command = `$order ${codes.join(" ")}`;
 
   navigator.clipboard.writeText(command).then(() => {
-    alert('Copied to clipboard!');
+    alert("Copied to clipboard!\n");
   });
 }
-
     function resetSelection() {
       searchInput.value = '';
       renderList();
@@ -364,22 +354,10 @@ function showPopup() {
   const codes = Array.from(checked).map(cb => cb.value);
   const names = Array.from(checked).map(cb => cb.parentNode.innerText.trim());
   const popup = document.getElementById('popup');
-// Clear the popup first
-const content = document.getElementById('popup-content');
-content.innerHTML = `
-  <strong>Selected Items:</strong><hr>
-  <ul id="output" style="list-style-type: none; padding: 0;"></ul>
-`;
-
-// Fill in the output list
-const ul = document.getElementById('output');
-names.forEach(name => {
-  const li = document.createElement('li');
-  li.textContent = name;
-  ul.appendChild(li);
-});
-
-popup.style.display = 'block';
+  const content = document.getElementById('popup-content');
+  content.innerHTML = "<strong>Selected Items:</strong><br>" + names.join("<br>") +
+                      "<hr><strong>Command:</strong><br>$order " + codes.join(" ");
+  popup.style.display = 'block';
 }
 function hidePopup() {
   document.getElementById('popup').style.display = 'none';
