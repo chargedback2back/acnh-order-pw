@@ -135,18 +135,17 @@ body {
 }
 </style></head>
 <body>
-
 <button id="popup-btn" onclick="showPopup()"></button>
 <div id="popup">
 <span id="popup-close" onclick="hidePopup()">✖</span>
 <div id="popup-content"></div>
-<button id="popup-copy" onclick="copyToClipboard()"></button>
+<button id="popup-copy" onclick="copyToClipboard()"><img alt="Copy" src="Notes 2.png" style="width: 100%; max-width: 160px; height: auto;"/></button>
 </div>
 <h1>🌿 ACNH Item Order Builder</h1>
 <input id="search" placeholder="Search for items..." type="text"/>
 <div id="controls">
-<button onclick="generateOrder()">Generate $order</button>
-<button onclick="copyToClipboard()">Copy to Clipboard</button>
+
+
 <button onclick="resetSelection()">Reset</button>
 <div class="output" id="output"></div>
 </div>
