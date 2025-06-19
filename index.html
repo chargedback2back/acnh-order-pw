@@ -9,6 +9,34 @@
 <link href="manifest.json" rel="manifest"/>
 <meta content="#aad576" name="theme-color"/>
 <style>
+    #title-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+#title-banner img {
+  height: 60px;
+  width: auto;
+  opacity: 0.9;
+}
+
+.title-text h1 {
+  font-family: 'Fink Heavy', sans-serif;
+  color: #2e5e2e;
+  font-size: 1.8rem;
+  text-align: center;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.title-text span {
+  font-weight: bold;
+}
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: linear-gradient(#e4f5dc, #f6f9ee);
@@ -283,6 +311,12 @@ button.badge-top-right:before {
 }
 </style></head>
 <body>
+    <div id="title-banner">
+  <img src="CE43BCB4-14C5-4210-ACD0-4E22AA281DC2_1_201_a-removebg-preview.png" alt="ACNH Icon">
+  <div class="title-text">
+    <h1>ACNH Item<br><span>Order Builder</span></h1>
+  </div>
+</div>
 <button id="popup-btn" onclick="showPopup()"><span id="cart-badge">0</span></button>
 <div id="popup">
 <span id="popup-close" onclick="hidePopup()">✖</span><button id="popup-copy" onclick="copyToClipboard()" style="margin-bottom: 1em; font-weight: bold; font-family: 'Fink Heavy'; background-color: #98c867; color: black; border: none; padding: 0.5em 1em; border-radius: 6px;">Copy</button>
