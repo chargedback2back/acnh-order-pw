@@ -158,6 +158,10 @@ body {
   margin: 1rem auto 0;
 }
 </style><style>
+#popup-btn {
+    position: relative;
+}
+
 #cart-badge {
     position: absolute;
     top: -5px;
@@ -169,9 +173,6 @@ body {
     border-radius: 999px;
     z-index: 9999;
     display: inline-block;
-}
-#popup-btn {
-    position: relative;
 }
 </style><style>
 .cart-container {
@@ -216,6 +217,63 @@ button[data-count]:before {
 button.badge-top-right:before {
     left: auto;
     right: -7px;
+}
+</style><style>
+button {
+    position: relative;
+}
+
+button[data-count]:before {
+    content: attr(data-count);
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    display: block;
+    border-radius: 50%;
+    background: rgb(67, 151, 232);
+    border: 1px solid #FFF;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    color: #FFF;
+    position: absolute;
+    top: -7px;
+    left: -7px;
+    font-size: 12px;
+}
+
+button.badge-top-right:before {
+    left: auto;
+    right: -7px;
+}
+</style><style>
+#cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    display: none;
+    z-index: 1000;
+}
+</style><style>
+#cart-button {
+    position: relative;
+}
+
+#cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    display: none;
+    z-index: 9999;
 }
 </style></head>
 <body>
@@ -344,50 +402,10 @@ function updateCartBadge() {
 
 document.addEventListener('DOMContentLoaded', function () {
     updateCartBadge();
-    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    document.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
         cb.addEventListener('change', updateCartBadge);
     });
     setInterval(updateCartBadge, 1000);
-});
-</script><script>
-function updateCartBadge() {
-  const selected = document.querySelectorAll('input[type="checkbox"]:checked').length;
-  const badge = document.getElementById('cart-badge');
-  if (badge) {
-    if (selected > 0) {
-      badge.textContent = selected;
-      badge.style.display = 'inline-block';
-    } else {
-      badge.style.display = 'none';
-    }
-  }
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-  updateCartBadge();
-  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('change', updateCartBadge);
-  });
-});
-</script><script>
-function updateCartBadge() {
-  const selected = document.querySelectorAll('input[type="checkbox"]:checked').length;
-  const badge = document.getElementById('cart-badge');
-  if (badge) {
-    if (selected > 0) {
-      badge.textContent = selected;
-      badge.style.display = 'inline-block';
-    } else {
-      badge.style.display = 'none';
-    }
-  }
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-  updateCartBadge();
-  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('change', updateCartBadge);
-  });
 });
 </script><script>
 function updateCartBadge() {
@@ -398,11 +416,114 @@ function updateCartBadge() {
     }
 }
 
+document.addEventListener('change', function(e) {
+    if (e.target && e.target.matches('input[type="checkbox"]')) {
+        updateCartBadge();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartBadge();
+    setInterval(updateCartBadge, 1000);
+});
+</script><script>
+function updateCartBadge() {
+    const count = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    const cartBtn = document.querySelector('button.badge-top-right');
+    if (cartBtn) {
+        cartBtn.setAttribute('data-count', count > 0 ? count : '');
+    }
+}
+
+document.addEventListener('change', function(e) {
+    if (e.target && e.target.matches('input[type="checkbox"]')) {
+        updateCartBadge();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartBadge();
+    setInterval(updateCartBadge, 1000);
+});
+</script><script>
+function updateCartBadge() {
+    const count = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    const cartBtn = document.querySelector('button.badge-top-right');
+    if (cartBtn) {
+        cartBtn.setAttribute('data-count', count > 0 ? count : '');
+    }
+}
+
+document.addEventListener('change', function(e) {
+    if (e.target && e.target.matches('input[type="checkbox"]')) {
+        updateCartBadge();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartBadge();
+    setInterval(updateCartBadge, 1000);
+});
+</script><script>
+function updateCartBadge() {
+    const count = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    const cartBtn = document.querySelector('button.badge-top-right');
+    if (cartBtn) {
+        cartBtn.setAttribute('data-count', count > 0 ? count : '');
+    }
+}
+
+document.addEventListener('change', function(e) {
+    if (e.target && e.target.matches('input[type="checkbox"]')) {
+        updateCartBadge();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartBadge();
+    setInterval(updateCartBadge, 1000);
+});
+</script><script>
+function updateCartBadge() {
+    const count = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    const badge = document.getElementById('cart-badge');
+    if (badge) {
+        if (count > 0) {
+            badge.textContent = count;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     updateCartBadge();
     document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
         cb.addEventListener('change', updateCartBadge);
     });
+    setInterval(updateCartBadge, 1000);
+});
+</script><script>
+function updateCartBadge() {
+    const count = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    const badge = document.getElementById('cart-badge');
+    if (badge) {
+        if (count > 0) {
+            badge.textContent = count;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    updateCartBadge();
+    document.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+        cb.addEventListener('change', updateCartBadge);
+    });
+    setInterval(updateCartBadge, 1000);
 });
 </script></body>
 </html>
