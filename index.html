@@ -9,6 +9,26 @@
 <link href="manifest.json" rel="manifest"/>
 <meta content="#aad576" name="theme-color"/>
 <style>
+    .title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-left: 10px;
+}
+
+.title-icon {
+  height: 50px;
+  width: auto;
+}
+
+.title {
+  color: #98c867; /* Green matching the Reset button */
+  font-size: 1.8em;
+  margin: 0;
+  font-weight: bold;
+  line-height: 1.2;
+}
     #title-banner {
   display: flex;
   align-items: center;
@@ -311,11 +331,10 @@ button.badge-top-right:before {
 }
 </style></head>
 <body>
-    <div id="title-banner">
-  <img src="CE43BCB4-14C5-4210-ACD0-4E22AA281DC2_1_201_a-removebg-preview.png" alt="ACNH Icon">
-  <div class="title-text">
-    <h1>ACNH Item<br><span>Order Builder</span></h1>
-  </div>
+<div class="title-wrapper">
+  <img src="CE43BCB4-14C5-4210-ACD0-4E22AA281DC2_1_201_a-removebg-preview.png" alt="ACNH Icon" class="title-icon">
+  <h1 class="title">ACNH Item<br>Order Builder</h1>
+</div>
 </div>
 <button id="popup-btn" onclick="showPopup()"><span id="cart-badge">0</span></button>
 <div id="popup">
