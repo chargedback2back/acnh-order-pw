@@ -1,1 +1,8 @@
-{"name": "ACNH Order Builder", "short_name": "ACNH Builder", "start_url": "acnh_pwa.html", "display": "standalone", "background_color": "#e4f5dc", "theme_color": "#aad576", "icons": []}
+{
+  "name": "ACNH Order Builder",
+  "short_name": "ACNH Builder",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#e4f5dc",
+  "theme_color": "#aad576"
+}
