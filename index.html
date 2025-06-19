@@ -331,15 +331,13 @@ button.badge-top-right:before {
     }
 
 function copyToClipboard() {
-  const output = document.getElementById('output');
-  if (output) {
-    const items = [...output.querySelectorAll('li')].map(li => li.textContent).join(' ');
-    navigator.clipboard.writeText(items).then(() => {
-      alert('Copied to clipboard!');
-    });
-  } else {
-    alert('No output element found.');
-  }
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+  const codes = [...checkboxes].map(cb => cb.getAttribute('data-code')).filter(code => code);
+  const command = `$order ${codes.join(" ")}`;
+
+  navigator.clipboard.writeText(command).then(() => {
+    alert('Copied to clipboard!');
+  });
 }
 
     function resetSelection() {
