@@ -306,7 +306,12 @@ button.badge-top-right:before {
     const output = document.getElementById('output');
 
     function renderList(filter = '') {
-      itemList.innerHTML = '';
+      list.innerHTML += `
+  <label class="item">
+    <input type="checkbox" data-code="${item.code}" onchange="updateCartCount()" />
+    <span>${name}</span>
+  </label>
+`;
       Object.keys(items)
         .filter(name => name.toLowerCase().includes(filter.toLowerCase()))
         .forEach(name => {
