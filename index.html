@@ -133,19 +133,51 @@ body {
     width: 120px;
     height: 40px;
 }
+</style><style>
+#reset-btn img {
+  width: 64px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+#popup {
+  display: none;
+  position: fixed;
+  top: 15%;
+  left: 5%;
+  width: 90%;
+  max-height: 70%;
+  overflow-y: auto;
+  padding: 1rem;
+  background: #f4fff1;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+#popup-close {
+  float: right;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+#popup-copy img {
+  width: auto;
+  max-width: 140px;
+  height: auto;
+  display: block;
+  margin: 1rem auto 0;
+}
 </style></head>
 <body>
 <button id="popup-btn" onclick="showPopup()"></button>
 <div id="popup">
 <span id="popup-close" onclick="hidePopup()">✖</span>
 <div id="popup-content"></div>
-<button id="popup-copy" onclick="copyToClipboard()"><img alt="Copy" src="Notes 2.png" style="width: 100%; max-width: 160px; height: auto;"/></button>
+<button id="popup-copy" onclick="copyToClipboard()"><img alt="Copy" src="Notes 2.jpeg"/></button>
 </div>
 <h1>🌿 ACNH Item Order Builder</h1>
 <input id="search" placeholder="Search for items..." type="text"/>
 <div id="controls">
-
-
 <button onclick="resetSelection()">Reset</button>
 <div class="output" id="output"></div>
 </div>
