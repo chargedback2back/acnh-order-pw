@@ -159,20 +159,19 @@ body {
 }
 </style><style>
 #cart-badge {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  background: red;
-  color: white;
-  font-size: 0.6rem;
-  padding: 2px 6px;
-  border-radius: 999px;
-  display: none;
-  z-index: 100;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    z-index: 9999;
+    display: inline-block;
 }
-.cart-container {
-  position: relative;
-  display: inline-block;
+#popup-btn {
+    position: relative;
 }
 </style><style>
 .cart-container {
@@ -220,7 +219,7 @@ button.badge-top-right:before {
 }
 </style></head>
 <body>
-<button id="popup-btn" onclick="showPopup()"></button>
+<button id="popup-btn" onclick="showPopup()"><span id="cart-badge">0</span></button>
 <div id="popup">
 <span id="popup-close" onclick="hidePopup()">✖</span>
 <div id="popup-content"></div>
@@ -336,21 +335,20 @@ window.addEventListener("load", () => {
 });
 </script><script>
 function updateCartBadge() {
-  const selectedItems = document.querySelectorAll('input[type="checkbox"]:checked');
-  const badge = document.getElementById('cart-badge');
-  if (selectedItems.length > 0) {
-    badge.textContent = selectedItems.length;
-    badge.style.display = 'inline-block';
-  } else {
-    badge.style.display = 'none';
-  }
+    const count = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    const badge = document.getElementById('cart-badge');
+    if (badge) {
+        badge.textContent = count;
+    }
 }
 
-document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-  cb.addEventListener('change', updateCartBadge);
+document.addEventListener('DOMContentLoaded', function () {
+    updateCartBadge();
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', updateCartBadge);
+    });
+    setInterval(updateCartBadge, 1000);
 });
-
-window.addEventListener('load', updateCartBadge);
 </script><script>
 function updateCartBadge() {
   const selected = document.querySelectorAll('input[type="checkbox"]:checked').length;
