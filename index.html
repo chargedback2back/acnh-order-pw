@@ -245,20 +245,33 @@ function hidePopup() {
 </div>
 </div>
 <script>
-document.querySelectorAll("li").forEach(item => {
-  let touchstartX = 0;
-  let touchendX = 0;
-  item.addEventListener("touchstart", e => touchstartX = e.changedTouches[0].screenX);
-  item.addEventListener("touchend", e => {
-    touchendX = e.changedTouches[0].screenX;
-    if (touchendX < touchstartX - 50) {
-      const text = item.textContent.trim();
-      if (text === "ABD (Green)") {
-        document.getElementById("modal-image").src = "https://acnhcdn.com/latest/FtrIcon/FtrATM_Remake_4_0.png";
-        document.getElementById("image-modal").style.display = "flex";
+function setupSwipeListeners() {
+  document.querySelectorAll("li").forEach(item => {
+    let touchstartX = 0;
+    let touchendX = 0;
+
+    item.addEventListener("touchstart", e => {
+      touchstartX = e.changedTouches[0].screenX;
+    });
+
+    item.addEventListener("touchend", e => {
+      touchendX = e.changedTouches[0].screenX;
+      if (touchendX < touchstartX - 30) {
+        const text = item.textContent.trim();
+        if (text === "ABD (Green)") {
+          const modal = document.getElementById("image-modal");
+          const img = document.getElementById("modal-image");
+          img.src = "https://acnhcdn.com/latest/FtrIcon/FtrATM_Remake_4_0.png";
+          modal.style.display = "flex";
+        }
       }
-    }
+    });
   });
+}
+
+// Delay listener attachment to ensure elements exist
+window.addEventListener("load", () => {
+  setTimeout(setupSwipeListeners, 500);
 });
 </script></body>
 </html>
