@@ -286,9 +286,8 @@ button.badge-top-right:before {
 <body>
 <button id="popup-btn" onclick="showPopup()"><span id="cart-badge">0</span></button>
 <div id="popup">
-<span id="popup-close" onclick="hidePopup()">✖</span>
-<div id="popup-content"></div>
-<button id="popup-copy" onclick="copyToClipboard()"></button>
+<span id="popup-close" onclick="hidePopup()">✖</span><button id="popup-copy" onclick="copyToClipboard()" style="margin-bottom: 1em; font-weight: bold; font-family: 'Fink Heavy'; background-color: #98c867; color: black; border: none; padding: 0.5em 1em; border-radius: 6px;">Copy</button>
+<div id="popup-content"><strong>Selected Items:</strong><br/><hr/></div>
 </div>
 <h1>🌿 ACNH Item Order Builder</h1>
 <input id="search" placeholder="Search for items..." type="text"/>
