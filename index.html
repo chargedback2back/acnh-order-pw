@@ -395,10 +395,16 @@ const popup = document.getElementById('popup');
 }
 
 function updateCartBadge() {
-  console.log('Selected items:', selectedItems);
-  const totalCount = Object.values(selectedItems)
-    .reduce((sum, qty) => sum + qty, 0);
-  cartBadge.textContent = totalCount > 0 ? totalCount : '';
+  const cartBadge = document.getElementById('cart-badge');
+  const totalQty = Object.values(selectedItems).reduce((sum, qty) => sum + qty, 0);
+
+  if (totalQty > 0) {
+    cartBadge.textContent = totalQty;
+    cartBadge.style.display = 'inline-block';
+  } else {
+    cartBadge.textContent = '';
+    cartBadge.style.display = 'none';
+  }
 }
 
 function updatePopupContent() {
