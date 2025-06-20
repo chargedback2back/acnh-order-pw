@@ -449,25 +449,22 @@ function generateOrder() {
 }
 
 function copyToClipboard() {
-  const items = document.querySelectorAll('.item');
-  let orderCodes = [];
+  const contentEl = document.getElementById('popup-content');
+  const rawText = contentEl.innerText;
 
-  items.forEach(item => {
-    const checkbox = item.querySelector('input[type="checkbox"]');
-    const quantityInput = item.querySelector('.quantity-input');
-    const quantity = parseInt(quantityInput.value, 10) || 1;
+  // Only extract everything starting from the "$order" line onward
+  const orderIndex = rawText.indexOf('$order');
+  const commandOnly = rawText.substring(orderIndex).replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
 
-    if (checkbox.checked) {
-      for (let i = 0; i < quantity; i++) {
-        orderCodes.push(checkbox.value);
-      }
-    }
-  });
+  // Use a virtual textarea to copy reliably
+  const textarea = document.createElement('textarea');
+  textarea.value = commandOnly;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textarea);
 
-  const command = orderCodes.length > 0 ? `$order ${orderCodes.join(' ')}` : 'No items selected.';
-  navigator.clipboard.writeText(command).then(() => {
-    alert('Copied to clipboard!');
-  });
+  alert('Command copied to clipboard!');
 }
 
 function resetSelection() {
