@@ -373,42 +373,91 @@ const popup = document.getElementById('popup');
     const itemList = document.getElementById('itemList');
     const output = document.getElementById('output');
 
-    // Optimized renderList using DocumentFragment
     async function renderList(filter = '') {
       const response = await fetch('final_parsed_animal_crossing_data.json');
       const data = await response.json();
-      // Build items object with both id and image
+      console.log("Fetched item data:", data);
+
       const items = {};
+      // Also store image per item
+      const itemImages = {};
       data.forEach(entry => {
         const name = entry["Named Variation"] || '';
-        const id = entry["Long ID"] || '';
+        const longID = entry["Long ID"] || '';
         const image = entry["Image"] || '';
-        if (name && id) {
-          items[name] = { id: id, image: image };
+        if (name && longID) {
+          items[name] = longID;
+          itemImages[name] = image;
         }
       });
 
-      itemList.innerHTML = '';
+      // Optimized version using DocumentFragment and keeping camera/image button functional
       const fragment = document.createDocumentFragment();
 
       Object.keys(items)
         .filter(name => name.toLowerCase().includes(filter.toLowerCase()))
-        .slice(0, 50)
         .forEach(name => {
+          const longId = items[name];
+          const isSelected = selectedItems.hasOwnProperty(longId);
+          const qtyValue = selectedItems[longId] || 1;
+          const image = itemImages[name] || '';
+
           const div = document.createElement('div');
           div.className = 'item';
           div.innerHTML = `
-            <label>
-              <input type='checkbox' value='${items[name].id}' style='margin-right: 8px;'>
-              ${name}
-            </label>
-            <input type='number' min='1' value='1' class='quantity-input' style='width: 40px; margin-left: 10px;'>
-            <button class='image-button' data-name='${name}'>📷</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              <div style="flex-grow: 1;">
+                <label>
+                  <input type='checkbox' value='${longId}' ${isSelected ? 'checked' : ''}>
+                  ${name}
+                </label>
+                <input type='number' min='1' value='${qtyValue}' class='quantity-input' style='${isSelected ? 'display:inline-block;' : 'display:none; margin-left: 8px; width: 50px;'}'>
+              </div>
+              <div style="flex-shrink: 0; margin-left: 12px;">
+                <button class="view-image-btn" data-image="${image}" style="background: none; border: none; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+                  <img src="Camera.png" alt="View Image" style="width: 100%; height: 100%; object-fit: contain;">
+                </button>
+              </div>
+            </div>
           `;
+
+          const checkbox = div.querySelector('input[type="checkbox"]');
+          const quantityInput = div.querySelector('.quantity-input');
+
+          checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+              quantityInput.style.display = 'inline-block';
+              selectedItems[longId] = parseInt(quantityInput.value, 10) || 1;
+            } else {
+              quantityInput.style.display = 'none';
+              delete selectedItems[longId];
+            }
+            updatePopupContent();
+            updateCartBadge();
+          });
+
+          quantityInput.addEventListener('input', () => {
+            if (checkbox.checked) {
+              selectedItems[longId] = parseInt(quantityInput.value, 10) || 1;
+              updatePopupContent();
+              updateCartBadge();
+            }
+          });
+
+          const imageButton = div.querySelector('.view-image-btn');
+          imageButton.addEventListener('click', () => {
+            const modal = document.getElementById('image-modal');
+            const img = document.getElementById('modal-image');
+            img.src = imageButton.getAttribute('data-image');
+            modal.style.display = 'flex';
+          });
+
           fragment.appendChild(div);
         });
 
+      itemList.innerHTML = '';
       itemList.appendChild(fragment);
+
       window.items = items; // Make globally available for updatePopupContent
       updatePopupContent();
     }
@@ -494,11 +543,7 @@ function resetSelection() {
   updateCartBadge();
 }
 
-    let debounceTimer;
-    searchInput.addEventListener('input', e => {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => renderList(e.target.value), 250);
-    });
+    searchInput.addEventListener('input', e => renderList(e.target.value));
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js');
     }
