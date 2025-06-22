@@ -365,22 +365,27 @@ button.badge-top-right:before {
 </div>
 <div id="itemList"></div>
 <script>
+  // Lazy loading variables
+  let allFilteredItems = [];
+  let itemsPerPage = 50;
+  let currentRenderedCount = 0;
+  let items = {};
+  let itemImages = {};
+
   const selectedItems = {};
   const cartBadge = document.getElementById('cart-badge');
-const popupContent = document.getElementById('popup-content');
-const popup = document.getElementById('popup');
-    const searchInput = document.getElementById('search');
-    const itemList = document.getElementById('itemList');
-    const output = document.getElementById('output');
+  const popupContent = document.getElementById('popup-content');
+  const popup = document.getElementById('popup');
+  const searchInput = document.getElementById('search');
+  const itemList = document.getElementById('itemList');
+  const output = document.getElementById('output');
 
-    async function renderList(filter = '') {
+  async function renderList(filter = '') {
+    // Only fetch and populate items/itemsImages if not already loaded
+    if (Object.keys(items).length === 0) {
       const response = await fetch('final_parsed_animal_crossing_data.json');
       const data = await response.json();
-      console.log("Fetched item data:", data);
-
-      const items = {};
-      // Also store image per item
-      const itemImages = {};
+      // Populate items and itemImages
       data.forEach(entry => {
         const name = entry["Named Variation"] || '';
         const longID = entry["Long ID"] || '';
@@ -390,77 +395,91 @@ const popup = document.getElementById('popup');
           itemImages[name] = image;
         }
       });
-
-      // Optimized version using DocumentFragment and keeping camera/image button functional
-      const fragment = document.createDocumentFragment();
-
-      Object.keys(items)
-        .filter(name => name.toLowerCase().includes(filter.toLowerCase()))
-        .forEach(name => {
-          const longId = items[name];
-          const isSelected = selectedItems.hasOwnProperty(longId);
-          const qtyValue = selectedItems[longId] || 1;
-          const image = itemImages[name] || '';
-
-          const div = document.createElement('div');
-          div.className = 'item';
-          div.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-              <div style="flex-grow: 1;">
-                <label>
-                  <input type='checkbox' value='${longId}' ${isSelected ? 'checked' : ''}>
-                  ${name}
-                </label>
-                <input type='number' min='1' value='${qtyValue}' class='quantity-input' style='${isSelected ? 'display:inline-block;' : 'display:none; margin-left: 8px; width: 50px;'}'>
-              </div>
-              <div style="flex-shrink: 0; margin-left: 12px;">
-                <button class="view-image-btn" data-image="${image}" style="background: none; border: none; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
-                  <img src="Camera.png" alt="View Image" style="width: 100%; height: 100%; object-fit: contain;">
-                </button>
-              </div>
-            </div>
-          `;
-
-          const checkbox = div.querySelector('input[type="checkbox"]');
-          const quantityInput = div.querySelector('.quantity-input');
-
-          checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
-              quantityInput.style.display = 'inline-block';
-              selectedItems[longId] = parseInt(quantityInput.value, 10) || 1;
-            } else {
-              quantityInput.style.display = 'none';
-              delete selectedItems[longId];
-            }
-            updatePopupContent();
-            updateCartBadge();
-          });
-
-          quantityInput.addEventListener('input', () => {
-            if (checkbox.checked) {
-              selectedItems[longId] = parseInt(quantityInput.value, 10) || 1;
-              updatePopupContent();
-              updateCartBadge();
-            }
-          });
-
-          const imageButton = div.querySelector('.view-image-btn');
-          imageButton.addEventListener('click', () => {
-            const modal = document.getElementById('image-modal');
-            const img = document.getElementById('modal-image');
-            img.src = imageButton.getAttribute('data-image');
-            modal.style.display = 'flex';
-          });
-
-          fragment.appendChild(div);
-        });
-
-      itemList.innerHTML = '';
-      itemList.appendChild(fragment);
-
       window.items = items; // Make globally available for updatePopupContent
-      updatePopupContent();
     }
+
+    allFilteredItems = Object.keys(items)
+      .filter(name => name.toLowerCase().includes(filter.toLowerCase()));
+    currentRenderedCount = 0;
+    itemList.innerHTML = '';
+    renderMoreItems(); // Render initial batch
+    updatePopupContent();
+  }
+
+  function renderMoreItems() {
+    const fragment = document.createDocumentFragment();
+    const endIndex = Math.min(currentRenderedCount + itemsPerPage, allFilteredItems.length);
+
+    for (let i = currentRenderedCount; i < endIndex; i++) {
+      const name = allFilteredItems[i];
+      const longId = items[name];
+      const isSelected = selectedItems.hasOwnProperty(longId);
+      const qtyValue = selectedItems[longId] || 1;
+      const image = itemImages[name] || '';
+
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <div style="flex-grow: 1;">
+            <label>
+              <input type='checkbox' value='${longId}' ${isSelected ? 'checked' : ''}>
+              ${name}
+            </label>
+            <input type='number' min='1' value='${qtyValue}' class='quantity-input' style='${isSelected ? 'display:inline-block;' : 'display:none; margin-left: 8px; width: 50px;'}'>
+          </div>
+          <div style="flex-shrink: 0; margin-left: 12px;">
+            <button class="view-image-btn" data-image="${image}" style="background: none; border: none; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+              <img src="Camera.png" alt="View Image" style="width: 100%; height: 100%; object-fit: contain;">
+            </button>
+          </div>
+        </div>
+      `;
+
+      const checkbox = div.querySelector('input[type="checkbox"]');
+      const quantityInput = div.querySelector('.quantity-input');
+
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          quantityInput.style.display = 'inline-block';
+          selectedItems[longId] = parseInt(quantityInput.value, 10) || 1;
+        } else {
+          quantityInput.style.display = 'none';
+          delete selectedItems[longId];
+        }
+        updatePopupContent();
+        updateCartBadge();
+      });
+
+      quantityInput.addEventListener('input', () => {
+        if (checkbox.checked) {
+          selectedItems[longId] = parseInt(quantityInput.value, 10) || 1;
+          updatePopupContent();
+          updateCartBadge();
+        }
+      });
+
+      const imageButton = div.querySelector('.view-image-btn');
+      imageButton.addEventListener('click', () => {
+        const modal = document.getElementById('image-modal');
+        const img = document.getElementById('modal-image');
+        img.src = imageButton.getAttribute('data-image');
+        modal.style.display = 'flex';
+      });
+
+      fragment.appendChild(div);
+    }
+
+    itemList.appendChild(fragment);
+    currentRenderedCount = endIndex;
+  }
+
+  // Attach scroll event for lazy loading
+  itemList.addEventListener('scroll', () => {
+    if (itemList.scrollTop + itemList.clientHeight >= itemList.scrollHeight - 10) {
+      renderMoreItems();
+    }
+  });
 
 function updateCartBadge() {
   const cartBadge = document.getElementById('cart-badge');
@@ -543,17 +562,17 @@ function resetSelection() {
   updateCartBadge();
 }
 
-    searchInput.addEventListener('input', e => renderList(e.target.value));
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
-    }
+  searchInput.addEventListener('input', e => renderList(e.target.value));
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+  }
+  renderList();
+  // Add clear search button handler
+  document.getElementById('clear-search').addEventListener('click', () => {
+    searchInput.value = '';
     renderList();
-    // Add clear search button handler
-    document.getElementById('clear-search').addEventListener('click', () => {
-      searchInput.value = '';
-      renderList();
-    });
-  </script>
+  });
+</script>
 <script>
 function showPopup() {
   updatePopupContent();
